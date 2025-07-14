@@ -10,6 +10,7 @@ import { ImagenArticuloModule } from './imagen-articulo/imagen-articulo.module';
 import { RentaModule } from './renta/renta.module';
 import { SolicitudRentadorModule } from './solicitud-rentador/solicitud-rentador.module';
 import { UsuarioModule } from './usuario/usuario.module';
+import { ReseñasModule } from './reseñas/reseñas.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { UsuarioModule } from './usuario/usuario.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    ReseñasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
