@@ -15,8 +15,8 @@ export class Usuario {
   @Column()
   password: string;
   @Column({ type: 'enum', enum: ['usuario', 'admin'], default: 'usuario' })
-  role: 'usuario' | 'admin';
-  @Column({ default: true })
+  rol: 'usuario' | 'admin';
+  @Column({ type: 'tinyint', width: 1, default: 0 })
   es_rentador: boolean;
   @CreateDateColumn()
   fecha_creacion: Date;
