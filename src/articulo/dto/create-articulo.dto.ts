@@ -1,30 +1,32 @@
-import { IsNotEmpty, isNumber, IsNumber, IsOptional, IsString , Length, Max} from "class-validator";
+import { IsNotEmpty, IsNumber, IsString, Length, Min } from "class-validator";
 
 export class CreateArticuloDto {
     @Length(5,30)
     @IsString()
     @IsNotEmpty()
-    nombre:string
+    nombre: string;
 
     @Length(5,40)
     @IsString()
     @IsNotEmpty()
-    description:string
+    description: string;
 
     @IsNumber()
     @IsNotEmpty()
-    precio:number
+    @Min(0, { message: 'El precio debe ser un número positivo.' })
+    precio: number;
 
     @IsNumber()
     @IsNotEmpty()
-    cantidad_total:number
+    @Min(0, { message: 'La cantidad total debe ser un número positivo.' }) 
+    cantidad_total: number;
 
     @IsNumber()
     @IsNotEmpty()
-    cantidad_disponible:number
+    @Min(0, { message: 'La cantidad disponible debe ser un número positivo.' })
+    cantidad_disponible: number;
 
     @IsString()
     @IsNotEmpty()
-    imagen_url:string
-
+    imagen_url: string;
 }
