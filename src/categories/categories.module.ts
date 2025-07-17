@@ -6,9 +6,9 @@ import { CategoriesService } from './categories.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Category]), // 👈 Esto registra el repositorio
+    TypeOrmModule.forFeature([Category]), //
   ],
-  controllers: [CategoriesController], // 👈 Ya importado arriba
-  providers: [CategoriesService], // 👈 Ya importado arriba
+  controllers: [CategoriesController],
+  providers: [CategoriesService],
 })
 export class CategoriesModule {}
