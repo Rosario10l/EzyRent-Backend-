@@ -4,15 +4,34 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Usuario } from './entities/usuario.entity';
 import { Repository } from 'typeorm';
-
+import * as bcrypt from 'bcryptjs';
+import { BadRequestException } from '@nestjs/common';
 @Injectable()
 export class UsuarioService {
   async createUsuario(createUsuarioDto: CreateUsuarioDto) {
-    const newUsuario = this._UsuarioRepository.create(createUsuarioDto);
-    await this._UsuarioRepository.save(newUsuario);
-    return newUsuario;
+    const existingUser = await this._UsuarioRepository.findOne({
+      where: { email: createUsuarioDto.email },
+    });
+    if (existingUser) {
+      throw new BadRequestException('El correo ya está registrado');
+    }
+    const hashedPassword = await bcrypt.hash(createUsuarioDto.password, 10);
+    const newUsuario = this._UsuarioRepository.create({
+      ...createUsuarioDto,
+      password: hashedPassword,
+    });
+    return this._UsuarioRepository.save(newUsuario);
   }
-
+  async validateUser(email: string, password: string): Promise<Usuario | null> {
+    const usuario = await this._UsuarioRepository.findOne({ where: { email } });
+    if (usuario) {
+      const isMatch: boolean = await bcrypt.compare(password, usuario.password);
+      if (isMatch) {
+        return usuario;
+      }
+    }
+    return null;
+  }
   async findAllUsuario() {
     return await this._UsuarioRepository.find({
       relations: ['solicitudes', 'articulos', 'rentas'],

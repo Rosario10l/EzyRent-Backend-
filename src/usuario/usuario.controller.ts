@@ -10,16 +10,44 @@ import {
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
-
+import { JwtService } from '@nestjs/jwt';
+import { UnauthorizedException } from '@nestjs/common';
 @Controller('usuario')
 export class UsuarioController {
-  constructor(private readonly usuarioService: UsuarioService) {}
+  constructor(
+    private readonly usuarioService: UsuarioService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-  @Post()
+  @Post('register')
   create(@Body() createUsuarioDto: CreateUsuarioDto) {
     return this.usuarioService.createUsuario(createUsuarioDto);
   }
 
+  @Post('login')
+  async login(@Body() body: { email: string; password: string }) {
+    const usuario = await this.usuarioService.validateUser(
+      body.email,
+      body.password,
+    );
+
+    if (!usuario) {
+      throw new UnauthorizedException('Credenciales inválidas');
+    }
+
+    const payload = { email: usuario.email, sub: usuario.id };
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const token: string = this.jwtService.sign(payload);
+
+    return {
+      access_token: token,
+      user: {
+        id: usuario.id,
+        email: usuario.email,
+        nombre: usuario.nombre,
+      },
+    };
+  }
   @Get()
   findAll() {
     return this.usuarioService.findAllUsuario();

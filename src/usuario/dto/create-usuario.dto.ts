@@ -1,8 +1,15 @@
-import { IsEmail, IsString, IsNotEmpty, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsString,
+  IsNotEmpty,
+  MinLength,
+  Length,
+} from 'class-validator';
 
 export class CreateUsuarioDto {
   @IsNotEmpty()
   @IsString()
+  @Length(3, 30)
   nombre: string;
   @IsNotEmpty()
   @IsEmail({}, { message: 'El correo electrónico no es válido' })

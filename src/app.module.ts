@@ -10,6 +10,7 @@ import { ImagenArticuloModule } from './imagen-articulo/imagen-articulo.module';
 import { RentaModule } from './renta/renta.module';
 import { SolicitudRentadorModule } from './solicitud-rentador/solicitud-rentador.module';
 import { UsuarioModule } from './usuario/usuario.module';
+import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -30,6 +31,11 @@ import { UsuarioModule } from './usuario/usuario.module';
       database: 'renta_app',
       autoLoadEntities: true,
       synchronize: true,
+    }),
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    JwtModule.register(<JwtModuleOptions>{
+      secret: process.env.JWT_SECRET || 'supersecreto',
+      signOptions: { expiresIn: '1h' },
     }),
   ],
   controllers: [AppController],
