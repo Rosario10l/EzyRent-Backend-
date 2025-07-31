@@ -79,7 +79,7 @@ try{
       if (error instanceof NotFoundException) {
         throw error;
       }
-      throw new InternalServerErrorException(`Ocurrió un error al eliminar el artículo con ID ${id}: ${error.message || error}`);
+      throw new InternalServerErrorException(`Ocurrió un error al eliminar el artículo con ID ${id}: ${error || error}`);
     }
   }
 
