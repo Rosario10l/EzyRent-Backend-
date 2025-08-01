@@ -28,7 +28,7 @@ import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'renta_app',
+      database: 'eazyrent',
       autoLoadEntities: true,
       synchronize: true,
     }),
