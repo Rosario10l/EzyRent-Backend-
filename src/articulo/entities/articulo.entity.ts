@@ -34,6 +34,7 @@ export class Articulo {
   activo: boolean;
   @CreateDateColumn()
   fecha_publicacion: Date;
+  
   @OneToMany(() => ImagenArticulo, (img) => img.articulo)
   imagenes: ImagenArticulo[];
   @OneToMany(() => Renta, (r) => r.articulo)
