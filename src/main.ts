@@ -12,7 +12,7 @@ async function bootstrap() {
     }),
   );
   app.enableCors({
-    origin: 'http://localhost:8101',
+    origin: 'http://localhost:8100',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
@@ -20,6 +20,3 @@ async function bootstrap() {
 }
 
 bootstrap();
-
-
-
