@@ -7,7 +7,7 @@ import { UpdateCalificacionDto } from './dto/update-calificacion.dto';
 export class CalificacionController {
   constructor(private readonly calificacionService: CalificacionService) {}
 
-  @Post()
+  @Post('newc')
   create(@Body() createCalificacionDto: CreateCalificacionDto) {
     return this.calificacionService.create(createCalificacionDto);
   }
