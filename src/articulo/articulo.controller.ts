@@ -9,7 +9,7 @@ export class ArticuloController {
 
   @Post()
   create(@Body() createArticuloDto: CreateArticuloDto) {
-    return this.articuloService.create(createArticuloDto);
+    return this.articuloService.createarticulo(createArticuloDto);
   }
 
   @Get()
@@ -19,12 +19,12 @@ export class ArticuloController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.articuloService.findOne(+id);
+    return this.articuloService.findArticulo(+id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateArticuloDto: UpdateArticuloDto) {
-    return this.articuloService.update(+id, updateArticuloDto);
+    return this.articuloService.updateArticulo(+id, updateArticuloDto);
   }
 
   @Delete(':id')
