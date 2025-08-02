@@ -13,6 +13,12 @@ import { UsuarioModule } from './usuario/usuario.module';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { ReseñasModule } from './reseñas/reseñas.module';
 import { HttpClientModule } from '@angular/common/http';
+<<<<<<< HEAD
+=======
+
+import { CategoriesModule } from './categories/categories.module';
+import { Category } from './categories/entities/category.entity'; // Importa la entidad Category
+>>>>>>> respaldo-temporal
 
 @Module({
   imports: [
@@ -25,12 +31,26 @@ import { HttpClientModule } from '@angular/common/http';
     RentaModule,
     SolicitudRentadorModule,
     UsuarioModule,
+<<<<<<< HEAD
+=======
+    ReseñasModule,
+    CategoriesModule,
+
+    // Configura JWT
+    JwtModule.register(<JwtModuleOptions>{
+      secret: process.env.JWT_SECRET || 'supersecreto',
+      signOptions: { expiresIn: '1h' },
+    }),
+
+    // Configuración de TypeORM con entidades explícitas
+>>>>>>> respaldo-temporal
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
       port: 3306,
       username: 'root',
       password: '',
+<<<<<<< HEAD
       database: 'renta_app',
       autoLoadEntities: true,
       synchronize: true,
@@ -41,6 +61,12 @@ import { HttpClientModule } from '@angular/common/http';
       secret: process.env.JWT_SECRET || 'supersecreto',
       signOptions: { expiresIn: '1h' },
     }),
+=======
+      database: 'ezyrent',
+      entities: [Category], // Puedes usar también autoLoadEntities: true si no quieres importarlas una por una
+      synchronize: true,
+    }),
+>>>>>>> respaldo-temporal
   ],
   controllers: [AppController],
   providers: [AppService],
