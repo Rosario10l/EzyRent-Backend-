@@ -22,6 +22,12 @@ export class ArticuloController {
     return this.articuloService.findArticulo(+id);
   }
 
+  // Endpoint para obtener productos por categoría
+  @@Get('categoria/:categoriaId')
+  async getArticulosPorCategoria(@Param('categoriaId') categoriaId: number) {
+  return this.articuloService.getArticulosPorCategoria(categoriaId);
+}
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateArticuloDto: UpdateArticuloDto) {
     return this.articuloService.updateArticulo(+id, updateArticuloDto);

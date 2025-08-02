@@ -83,5 +83,17 @@ try{
     }
   }
 
+  async findByCategoria(categoriaId: number) {
+  try {
+    return await this._ArticuloRepo.find({
+      where: { categoria: { id: categoriaId }, activo: true },
+      relations: ['categoria'],  // Asegúrate de cargar la relación de categoria
+    });
+  } catch (error) {
+    console.error('Error al buscar los productos por categoría:', error);
+    throw new NotFoundException(`No se encontraron productos para esta categoría`);
+    }
+  }
+
   
 }

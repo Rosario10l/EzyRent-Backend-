@@ -12,10 +12,12 @@ import { SolicitudRentadorModule } from './solicitud-rentador/solicitud-rentador
 import { UsuarioModule } from './usuario/usuario.module';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { ReseñasModule } from './reseñas/reseñas.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @Module({
   imports: [
     ArticuloModule,
+    HttpClientModule,
     CalificacionModule,
     CalificacionClienteModule,
     CategoriaModule,
