@@ -1,34 +1,50 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { SolicitudRentadorService } from './solicitud-rentador.service';
 import { CreateSolicitudRentadorDto } from './dto/create-solicitud-rentador.dto';
-import { UpdateSolicitudRentadorDto } from './dto/update-solicitud-rentador.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { Request } from 'express';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
 
 @Controller('solicitud-rentador')
 export class SolicitudRentadorController {
-  constructor(private readonly solicitudRentadorService: SolicitudRentadorService) {}
+  constructor(private readonly service: SolicitudRentadorService) {}
 
   @Post()
-  create(@Body() createSolicitudRentadorDto: CreateSolicitudRentadorDto) {
-    return this.solicitudRentadorService.create(createSolicitudRentadorDto);
+  @UseGuards(AuthGuard('jwt'))
+  async crear(@Req() req: Request, @Body() dto: CreateSolicitudRentadorDto) {
+    const user = req.user as Usuario;
+    return this.service.crearSolicitud(user.id, dto);
   }
 
   @Get()
-  findAll() {
-    return this.solicitudRentadorService.findAll();
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('admin')
+  async todas() {
+    return this.service.obtenerTodas();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.solicitudRentadorService.findOne(+id);
+  @Patch(':id/aprobar')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('admin')
+  async aprobar(@Param('id') id: number) {
+    return this.service.aprobar(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSolicitudRentadorDto: UpdateSolicitudRentadorDto) {
-    return this.solicitudRentadorService.update(+id, updateSolicitudRentadorDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.solicitudRentadorService.remove(+id);
+  @Patch(':id/rechazar')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('admin')
+  async rechazar(@Param('id') id: number) {
+    return this.service.rechazar(id);
   }
 }

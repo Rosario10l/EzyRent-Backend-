@@ -10,6 +10,10 @@ import { ImagenArticuloModule } from './imagen-articulo/imagen-articulo.module';
 import { RentaModule } from './renta/renta.module';
 import { SolicitudRentadorModule } from './solicitud-rentador/solicitud-rentador.module';
 import { UsuarioModule } from './usuario/usuario.module';
+import { ReseñasModule } from './reseñas/reseñas.module';
+import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './common/guards/roles.guard';
 
 @Module({
   imports: [
@@ -38,6 +42,12 @@ import { UsuarioModule } from './usuario/usuario.module';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    AppService,
+  ],
 })
-export class AppModule { }
+export class AppModule {}
