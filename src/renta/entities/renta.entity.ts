@@ -12,8 +12,8 @@ export class Renta {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(()=> Articulo, (a)=>a.rentas)
-  @JoinColumn({name:'articulo_id'})
+  @ManyToOne(() => Articulo, (articulo) => articulo.rentas)
+  @JoinColumn({ name: 'articulo_id' })
   articulo: Articulo;
 
 

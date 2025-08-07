@@ -21,12 +21,17 @@ export class CreateRentaDto {
   @IsPositive({ message: 'La cantidad debe ser un número positivo.' })
   cantidad: number;
 
-  @IsOptional() // Hacemos el estado opcional ya que tiene un valor por defecto en la base de datos
+  @IsOptional() 
   @IsEnum(EstadoRenta, { message: 'El estado debe ser un valor válido.' })
-  estado?: EstadoRenta; // Usamos el enum para asegurar los valores posibles
+  estado?: EstadoRenta; 
   
   @IsNotEmpty({ message: 'El ID del artículo es obligatorio.' })
   @IsInt({ message: 'El ID del artículo debe ser un número entero.' })
   @IsPositive({ message: 'El ID del artículo debe ser un número positivo.' })
   articuloId: number;
+
+  // @IsNotEmpty({ message: 'El ID del usuario es obligatorio.' })
+  // @IsInt({ message: 'El ID del usuario debe ser un número entero.' })
+  // @IsPositive({ message: 'El ID del usuario debe ser un número positivo.' })
+  // usuarioId: number;
 }
