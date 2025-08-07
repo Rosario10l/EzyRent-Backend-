@@ -5,13 +5,17 @@ import { Entity, ManyToOne, OneToOne } from 'typeorm';
 import { PrimaryGeneratedColumn } from 'typeorm';
 import { JoinColumn } from 'typeorm';
 import { Column } from 'typeorm';
+
 @Entity('rentas')
+
 export class Renta {
   @PrimaryGeneratedColumn()
   id: number;
-  @ManyToOne(() => Articulo, (a) => a.rentas)
-  @JoinColumn({ name: 'articulo_id' })
+
+  @OneToOne(()=> Articulo, (a)=>a.rentas)
+  @JoinColumn({name:'articulo_id'})
   articulo: Articulo;
+
 
   @ManyToOne(() => Usuario, (u) => u.rentas)
   @JoinColumn({ name: 'usuario_id' })
@@ -22,7 +26,7 @@ export class Renta {
   @Column()
   fecha_fin: Date;
   @Column()
-  camtidad: number;
+  cantidad: number;
   @Column({
     type: 'enum',
     enum: ['pendiente', 'aceptada', 'rechazada', 'devuelte'],
