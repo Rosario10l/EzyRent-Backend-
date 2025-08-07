@@ -8,7 +8,9 @@ export class RolesMiddleware implements NestMiddleware {
     const user = req.user;
 
     if (!user || user.rol !== 'admin') {
-      throw new ForbiddenException('Acceso denegado. Solo los administradores pueden acceder.');
+      throw new ForbiddenException(
+        'Acceso denegado. Solo los administradores pueden acceder.',
+      );
     }
 
     next();

@@ -2,6 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
+import { AuthenticatedRequest } from 'src/auth/interfaces/auth-request.interface';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -16,9 +17,13 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const request = context.switchToHttp().getRequest();
-    const user = request as Usuario;
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    console.log('User en RolesGuard:', request.user);
+
+    const user = request.user as Usuario;
+    if (!user || !user.rol) {
+      return false;
+    }
 
     return requiredRoles.includes(user.rol);
   }

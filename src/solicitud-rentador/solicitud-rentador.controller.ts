@@ -28,22 +28,16 @@ export class SolicitudRentadorController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('admin')
   async todas() {
     return this.service.obtenerTodas();
   }
 
   @Patch(':id/aprobar')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('admin')
   async aprobar(@Param('id') id: number) {
     return this.service.aprobar(id);
   }
 
   @Patch(':id/rechazar')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('admin')
   async rechazar(@Param('id') id: number) {
     return this.service.rechazar(id);
   }
