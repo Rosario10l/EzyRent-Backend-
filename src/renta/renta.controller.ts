@@ -3,13 +3,13 @@ import { RentaService } from './renta.service';
 import { CreateRentaDto } from './dto/create-renta.dto';
 import { UpdateRentaDto } from './dto/update-renta.dto';
 
-@Controller('renta')
+@Controller('rentas')
 export class RentaController {
   constructor(private readonly rentaService: RentaService) {}
 
   @Post()
   create(@Body() createRentaDto: CreateRentaDto) {
-    return this.rentaService.create(createRentaDto);
+    return this.rentaService.createrenta(createRentaDto);
   }
 
   @Get()
