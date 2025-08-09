@@ -37,6 +37,7 @@ export class Articulo {
   
   @OneToMany(() => ImagenArticulo, (img) => img.articulo)
   imagenes: ImagenArticulo[];
+  
   @OneToMany(() => Renta, (r) => r.articulo)
   rentas: Renta[];
 }
