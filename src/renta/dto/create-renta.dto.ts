@@ -30,8 +30,8 @@ export class CreateRentaDto {
   @IsPositive({ message: 'El ID del artículo debe ser un número positivo.' })
   articuloId: number;
 
-  // @IsNotEmpty({ message: 'El ID del usuario es obligatorio.' })
-  // @IsInt({ message: 'El ID del usuario debe ser un número entero.' })
-  // @IsPositive({ message: 'El ID del usuario debe ser un número positivo.' })
-  // usuarioId: number;
+  @IsNotEmpty({ message: 'El ID del usuario es obligatorio.' })
+  @IsInt({ message: 'El ID del usuario debe ser un número entero.' })
+  @IsPositive({ message: 'El ID del usuario debe ser un número positivo.' })
+  usuarioId: number;
 }

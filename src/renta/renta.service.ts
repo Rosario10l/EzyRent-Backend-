@@ -5,6 +5,7 @@ import { Renta } from './entities/renta.entity';
 import { Articulo } from '../articulo/entities/articulo.entity'; 
 import { CreateRentaDto } from './dto/create-renta.dto';
 import { UpdateRentaDto } from './dto/update-renta.dto';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
 
 @Injectable()
 export class RentaService {
@@ -13,25 +14,30 @@ export class RentaService {
     private readonly _rentaRepository: Repository<Renta>,
     @InjectRepository(Articulo)
     private readonly articuloRepository: Repository<Articulo>,
+    @InjectRepository(Usuario)
+    private readonly usuarioRepositori: Repository<Usuario>
   ) {}
 
   async createrenta(createRentaDto: CreateRentaDto): Promise<Renta> {
-    const { articuloId, cantidad, ...restOfDto } = createRentaDto;
+    const { articuloId, usuarioId, cantidad, ...restOfDto } = createRentaDto;
     const articulo = await this.articuloRepository.findOneBy({ id: articuloId });
     
     if (!articulo) {
       throw new NotFoundException(`El artículo con ID ${articuloId} no fue encontrado.`);
     }
 
+    const usuario = await this.usuarioRepositori.findOneBy({ id: usuarioId });
+    if (!usuario) {
+      throw new NotFoundException(`El usuario con ID ${usuarioId} no fue encontrado.`);
+    }
+
     if (articulo.cantidad_disponible < cantidad) {
       throw new BadRequestException(`No hay suficiente stock. Cantidad disponible: ${articulo.cantidad_disponible}`);
     }
 
-    // Se crea la nueva entidad de Renta
     const nuevaRenta = this._rentaRepository.create(restOfDto);
     nuevaRenta.articulo = articulo;
-    
-    // --- CAMBIO AQUÍ: Se asigna la cantidad antes de guardar la renta ---
+    nuevaRenta.usuario = usuario; 
     nuevaRenta.cantidad = cantidad;
 
     const rentaGuardada: Renta = await this._rentaRepository.save(nuevaRenta);
@@ -44,9 +50,10 @@ export class RentaService {
       throw new BadRequestException('Error al procesar la renta. Intenta de nuevo.');
     }
     
+    // CAMBIO AQUÍ: Se agrega 'usuario' a las relaciones para que se incluya en la respuesta
     const rentaConRelaciones = await this._rentaRepository.findOne({
       where: { id: rentaGuardada.id },
-      relations: ['articulo']
+      relations: ['articulo', 'usuario'] 
     });
     
     if (!rentaConRelaciones) {
@@ -55,6 +62,8 @@ export class RentaService {
 
     return rentaConRelaciones;
   }
+
+
 
   async findAll(): Promise<Renta[]> {
     return this._rentaRepository.find();
