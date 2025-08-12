@@ -21,7 +21,7 @@ export class Articulo {
   @Column()
   nombre: string;
   @Column('text')
-  descripcion: string;
+  description: string;
   @Column('decimal', { precision: 10, scale: 2 })
   precio: number;
   @Column()

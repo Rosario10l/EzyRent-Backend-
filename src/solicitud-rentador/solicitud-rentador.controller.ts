@@ -1,34 +1,40 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { SolicitudRentadorService } from './solicitud-rentador.service';
 import { CreateSolicitudRentadorDto } from './dto/create-solicitud-rentador.dto';
-import { UpdateSolicitudRentadorDto } from './dto/update-solicitud-rentador.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { Request } from 'express';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
 
 @Controller('solicitud-rentador')
 export class SolicitudRentadorController {
-  constructor(private readonly solicitudRentadorService: SolicitudRentadorService) {}
+  constructor(private readonly service: SolicitudRentadorService) {}
 
-  @Post()
-  create(@Body() createSolicitudRentadorDto: CreateSolicitudRentadorDto) {
-    return this.solicitudRentadorService.create(createSolicitudRentadorDto);
-  }
+ @Post()
+async crear(@Body() dto: CreateSolicitudRentadorDto) {
+  return this.service.crearSolicitud(dto);
+}
 
   @Get()
-  findAll() {
-    return this.solicitudRentadorService.findAll();
+  async todas() {
+    return this.service.obtenerTodas();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.solicitudRentadorService.findOne(+id);
+  @Patch(':id/aprobar')
+  async aprobar(@Param('id') id: number) {
+    return this.service.aprobar(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSolicitudRentadorDto: UpdateSolicitudRentadorDto) {
-    return this.solicitudRentadorService.update(+id, updateSolicitudRentadorDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.solicitudRentadorService.remove(+id);
+  @Patch(':id/rechazar')
+  async rechazar(@Param('id') id: number) {
+    return this.service.rechazar(id);
   }
 }

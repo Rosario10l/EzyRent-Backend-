@@ -21,5 +21,7 @@ export class SolicitudRentador {
     default: 'pendiente',
   })
   estado: 'pendiente' | 'aprobada' | 'rechazada';
-  fecha_creacion: Date;
+ @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+ fecha_creacion: Date;
+
 }

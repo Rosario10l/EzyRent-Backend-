@@ -45,6 +45,7 @@ export class UsuarioController {
         id: usuario.id,
         email: usuario.email,
         nombre: usuario.nombre,
+        rol:usuario.rol
       },
     };
   }
