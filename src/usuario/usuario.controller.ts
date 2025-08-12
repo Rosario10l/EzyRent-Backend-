@@ -35,8 +35,12 @@ export class UsuarioController {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
-    const payload = { email: usuario.email, sub: usuario.id };
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const payload = {
+      email: usuario.email,
+      sub: usuario.id,
+      rol: usuario.rol,
+    };
+
     const token: string = this.jwtService.sign(payload);
 
     return {
@@ -45,7 +49,8 @@ export class UsuarioController {
         id: usuario.id,
         email: usuario.email,
         nombre: usuario.nombre,
-        rol:usuario.rol
+
+        rol: usuario.rol,
       },
     };
   }

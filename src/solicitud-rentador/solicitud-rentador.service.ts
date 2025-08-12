@@ -19,27 +19,24 @@ export class SolicitudRentadorService {
     @InjectRepository(Usuario)
     private usuarioRepo: Repository<Usuario>,
   ) {}
-  async crearSolicitud(dto: CreateSolicitudRentadorDto) {
-  const usuario = await this.usuarioRepo.findOneBy({ id: dto.usuarioId });
-  if (!usuario) throw new NotFoundException('Usuario no encontrado');
 
-  const yaExiste = await this.solicitudRepo.findOne({
-    where: { usuario: { id: dto.usuarioId }, estado: 'pendiente' },
-  });
-  if (yaExiste) {
-    throw new NotFoundException('Ya existe una solicitud pendiente');
+  async crearSolicitud(usuarioId: number, dto: CreateSolicitudRentadorDto) {
+    const usuario = await this.usuarioRepo.findOneBy({ id: usuarioId });
+    if (!usuario) throw new NotFoundException('Usuario no encontrado');
+    const yaExiste = await this.solicitudRepo.findOne({
+      where: { usuario: { id: usuarioId }, estado: 'pendiente' },
+    });
+    if (yaExiste) {
+      throw new NotFoundException('Ya existe una solicitud pendiente');
+    }
+    const solicitud = this.solicitudRepo.create({
+      ...dto,
+      usuario,
+      estado: 'pendiente',
+      fecha_creacion: new Date(),
+    });
+    return await this.solicitudRepo.save(solicitud);
   }
-
-  const { usuarioId, ...resto } = dto;
-
-  const solicitud = this.solicitudRepo.create({
-    ...resto,
-    usuario,
-    estado: 'pendiente',
-    fecha_creacion: new Date(),
-  });
-  return await this.solicitudRepo.save(solicitud);
-}
 
   async obtenerTodas(): Promise<SolicitudRentador[]> {
     return this.solicitudRepo.find({

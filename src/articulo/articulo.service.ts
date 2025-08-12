@@ -4,7 +4,6 @@ import { UpdateArticuloDto } from './dto/update-articulo.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Articulo } from './entities/articulo.entity';
-import { log } from 'console';
 
 @Injectable()
 export class ArticuloService {

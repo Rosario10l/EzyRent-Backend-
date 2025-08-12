@@ -14,55 +14,53 @@ export class RentaService {
     private readonly _rentaRepository: Repository<Renta>,
     @InjectRepository(Articulo)
     private readonly articuloRepository: Repository<Articulo>,
-     @InjectRepository(Usuario)  // Inyección del repositorio usuario
-    private readonly usuarioRepository: Repository<Usuario>,
+    @InjectRepository(Usuario)
+    private readonly usuarioRepositori: Repository<Usuario>
   ) {}
 
- async createrenta(createRentaDto: CreateRentaDto): Promise<Renta> {
-  const { articuloId, camtidad, usuarioId, ...restOfDto } = createRentaDto;
+  async createrenta(createRentaDto: CreateRentaDto): Promise<Renta> {
+    const { articuloId, usuarioId, camtidad, ...restOfDto } = createRentaDto;
+    const articulo = await this.articuloRepository.findOneBy({ id: articuloId });
+    
+    if (!articulo) {
+      throw new NotFoundException(`El artículo con ID ${articuloId} no fue encontrado.`);
+    }
 
-  const articulo = await this.articuloRepository.findOneBy({ id: articuloId });
-  if (!articulo) {
-    throw new NotFoundException(`El artículo con ID ${articuloId} no fue encontrado.`);
+    const usuario = await this.usuarioRepositori.findOneBy({ id: usuarioId });
+    if (!usuario) {
+      throw new NotFoundException(`El usuario con ID ${usuarioId} no fue encontrado.`);
+    }
+
+    if (articulo.cantidad_disponible < camtidad) {
+      throw new BadRequestException(`No hay suficiente stock. Cantidad disponible: ${articulo.cantidad_disponible}`);
+    }
+
+    const nuevaRenta = this._rentaRepository.create(restOfDto);
+    nuevaRenta.articulo = articulo;
+    nuevaRenta.usuario = usuario; 
+    nuevaRenta.cantidad = camtidad;
+
+    const rentaGuardada: Renta = await this._rentaRepository.save(nuevaRenta);
+
+    try {
+      articulo.cantidad_disponible -= camtidad;
+      await this.articuloRepository.save(articulo);
+    } catch (error) {
+      console.error('Error al actualizar el stock del artículo:', error);
+      throw new BadRequestException('Error al procesar la renta. Intenta de nuevo.');
+    }
+    
+    // CAMBIO AQUÍ: Se agrega 'usuario' a las relaciones para que se incluya en la respuesta
+    const rentaConRelaciones = await this._rentaRepository.findOne({
+      where: { id: rentaGuardada.id },
+      relations: ['articulo', 'usuario'] 
+    });
+    
+    if (!rentaConRelaciones) {
+      throw new NotFoundException(`Renta con ID #${rentaGuardada.id} no encontrada después de la creación.`);    }
+    return rentaConRelaciones;
   }
 
-  if (articulo.cantidad_disponible < camtidad) {
-    throw new BadRequestException(`No hay suficiente stock. Cantidad disponible: ${articulo.cantidad_disponible}`);
-  }
-
-  // Buscar el usuario
-  const usuario = await this.usuarioRepository.findOneBy({ id: usuarioId });
-  if (!usuario) {
-    throw new NotFoundException(`El usuario con ID ${usuarioId} no fue encontrado.`);
-  }
-
-  // Crear entidad renta
-  const nuevaRenta = this._rentaRepository.create(restOfDto);
-  nuevaRenta.articulo = articulo;
-  nuevaRenta.camtidad = camtidad;
-  nuevaRenta.usuario = usuario;  // <---- Asignar usuario aquí
-
-  const rentaGuardada: Renta = await this._rentaRepository.save(nuevaRenta);
-
-  try {
-    articulo.cantidad_disponible -= camtidad;
-    await this.articuloRepository.save(articulo);
-  } catch (error) {
-    console.error('Error al actualizar el stock del artículo:', error);
-    throw new BadRequestException('Error al procesar la renta. Intenta de nuevo.');
-  }
-
-  const rentaConRelaciones = await this._rentaRepository.findOne({
-    where: { id: rentaGuardada.id },
-    relations: ['articulo', 'usuario']  // incluir usuario si lo quieres en la respuesta
-  });
-
-  if (!rentaConRelaciones) {
-    throw new NotFoundException(`Renta con ID #${rentaGuardada.id} no encontrada después de la creación.`);
-  }
-
-  return rentaConRelaciones;
-}
 
 
   async findAll(): Promise<Renta[]> {

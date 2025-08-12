@@ -18,10 +18,13 @@ import { Usuario } from 'src/usuario/entities/usuario.entity';
 export class SolicitudRentadorController {
   constructor(private readonly service: SolicitudRentadorService) {}
 
- @Post()
-async crear(@Body() dto: CreateSolicitudRentadorDto) {
-  return this.service.crearSolicitud(dto);
-}
+
+  @Post()
+  @UseGuards(AuthGuard('jwt'))
+  async crear(@Req() req: Request, @Body() dto: CreateSolicitudRentadorDto) {
+    const user = req.user as Usuario;
+    return this.service.crearSolicitud(user.id, dto);
+  }
 
   @Get()
   async todas() {

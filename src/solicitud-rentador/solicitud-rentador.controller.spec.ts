@@ -11,7 +11,9 @@ describe('SolicitudRentadorController', () => {
       providers: [SolicitudRentadorService],
     }).compile();
 
-    controller = module.get<SolicitudRentadorController>(SolicitudRentadorController);
+    controller = module.get<SolicitudRentadorController>(
+      SolicitudRentadorController,
+    );
   });
 
   it('should be defined', () => {
