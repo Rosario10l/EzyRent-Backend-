@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsUrl } from 'class-validator';
 
 export class CreateSolicitudRentadorDto {
   @IsNotEmpty()
@@ -8,5 +8,6 @@ export class CreateSolicitudRentadorDto {
   @IsNotEmpty()
   telefono: string;
 
-  identifacion_url?: string;
+  @IsUrl()
+  identificacion_url: string;
 }

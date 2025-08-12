@@ -12,8 +12,6 @@ import { SolicitudRentadorService } from './solicitud-rentador.service';
 import { CreateSolicitudRentadorDto } from './dto/create-solicitud-rentador.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
-import { Roles } from 'src/common/decorators/roles.decorator';
-import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
 
 @Controller('solicitud-rentador')
